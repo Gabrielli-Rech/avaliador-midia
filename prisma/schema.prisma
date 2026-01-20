@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Media {
+  id          Int       @id @default(autoincrement())
+  title       String
+  type        String
+  coverUrl    String?
+  status      String
+  releaseYear Int?
+  createdAt   DateTime  @default(now())
+  
+  reviews     Review[]  // Comentários gerais da obra
+  episodes    Episode[] // Lista de episódios
+}
+
+model Episode {
+  id        Int      @id @default(autoincrement())
+  title     String   // Ex: "S01E01 - O Começo"
+  mediaId   Int
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  
+  reviews   Review[] // Comentários específicos deste episódio
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String?
+  isSpoiler Boolean  @default(false) // <--- NOVO: Marca se é spoiler
+  createdAt DateTime @default(now())
+  
+  mediaId   Int?     // Pode ser comentário da série toda...
+  media     Media?   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  
+  episodeId Int?     // ...ou comentário de um episódio específico
+  episode   Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,20 @@
+-- CreateTable
+CREATE TABLE "Media" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "coverUrl" TEXT,
+    "status" TEXT NOT NULL,
+    "releaseYear" INTEGER,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "Review" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "rating" INTEGER NOT NULL,
+    "comment" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "mediaId" INTEGER NOT NULL,
+    CONSTRAINT "Review_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "Media" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
